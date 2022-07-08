@@ -1,0 +1,33 @@
+server {
+    root /www;
+    index index.php;
+
+    location ~ /\.(ht|gitignore) { # deny access to .htaccess files, if Apache's document root concurs with nginx's one
+        deny all;
+    }
+
+    location ~ \.(neon|ini|log|yml)$ { # deny access to configuration files
+        deny all;
+    }
+
+    location ~ /.well-known {
+        allow all;
+    }
+
+    location / {
+        try_files $uri $uri/ index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+        fastcgi_index $document_root/index.php;
+
+        fastcgi_split_path_info ^((?U).+\.php)(/?.+)$;
+        fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
+        fastcgi_param PATH_TRANSLATED $document_root/$fastcgi_path_info;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_read_timeout 300;
+    }
+}
+

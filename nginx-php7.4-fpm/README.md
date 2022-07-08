@@ -1,0 +1,2 @@
+- Ubuntu 20.04 with php7.4-fpm. Using 22.04 the default php version would be 8.1
+- Default document root /www but can be overrided by DOCUMENT_ROOT environment variable
